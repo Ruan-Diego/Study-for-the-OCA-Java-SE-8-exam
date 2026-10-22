@@ -113,15 +113,13 @@ pre.code .k{color:var(--kw)} pre.code .s{color:var(--str)} pre.code .n{color:var
 .err{color:var(--bad);margin-top:10px}
 .hidden{display:none!important}
 .big{font-size:44px;font-weight:750;letter-spacing:-.03em;line-height:1}
-.tutorial.card{margin-top:28px;padding:0}
-.tutorial summary{list-style:none;cursor:pointer;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;font-weight:650;font-size:17px}
-.tutorial summary::-webkit-details-marker{display:none}
-.tutorial summary::after{content:"+";font-size:22px;color:var(--muted);margin-left:12px}
-.tutorial[open] summary::after{content:"–"}
-.tutorial summary .hint{margin-left:auto}
-.steps{margin:0;padding:0 22px 20px 22px;list-style:none;counter-reset:s}
-.steps li{counter-increment:s;position:relative;padding:12px 0 12px 44px;border-top:1px solid var(--line)}
-.steps li::before{content:counter(s);position:absolute;left:0;top:12px;width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);font-weight:700;display:grid;place-items:center;font-size:14px}
+.tutorial.card{margin-bottom:14px}
+.tutorial h2{margin:0 0 10px}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:7px 0 7px 42px;min-height:30px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);font-weight:700;display:grid;place-items:center;font-size:14px}
+.drop{padding:28px 20px}
+.modes .card{text-align:left;display:flex;flex-direction:column;gap:2px;padding:16px 18px}
 a{color:var(--accent)}
 @media (max-width:600px){
   h1{font-size:25px} .brand span.t{display:none} nav button{padding:8px 8px;font-size:14px}
@@ -146,16 +144,19 @@ a{color:var(--accent)}
 <main class="wrap">
   <!-- HOME -->
   <section id="v-home">
-    <h1>Study for the OCA Java SE 8 exam</h1>
-    <p class="sub">Practice the book's review questions, run timed mock exams, and drill concepts with flashcards. Everything stays on this computer.</p>
+    <h1 style="margin-bottom:18px">Study for the OCA Java SE 8 exam</h1>
     <div id="importBox">
+      <div class="tutorial card" lang="pt-BR">
+        <h2>Como usar</h2>
+        <ol class="steps">
+          <li>Baixe o PDF do livro: <a href="https://www.wiley-vch.de/en/areas-interest/computing-computer-sciences/oca-978-1-118-95740-0" target="_blank" rel="noopener">OCA Java SE 8 Study Guide</a>.</li>
+          <li>Carregue o PDF no botão abaixo.</li>
+          <li>Pronto! Estude com qualquer um dos 3 modos.</li>
+        </ol>
+      </div>
       <div class="drop" id="drop">
-        <div style="font-size:34px">📘</div>
-        <h2 style="margin:8px 0 4px">Load your study guide PDF</h2>
-        <p>Drop the <i>OCA Java SE 8 Programmer I Study Guide (1Z0-808)</i> PDF here, or</p>
-        <p style="margin-top:12px"><label class="btn primary">Choose PDF<input type="file" id="file" accept="application/pdf" hidden></label></p>
-        <p class="hint" style="margin-top:14px">The PDF is read in your browser and never uploaded. You only need to do this once.</p>
-        <p class="hint">Don't have the book yet? <a href="https://www.wiley-vch.de/en/areas-interest/computing-computer-sciences/oca-978-1-118-95740-0" target="_blank" rel="noopener">Get it from Wiley</a>.</p>
+        <p style="margin:0 0 12px"><label class="btn primary">Choose PDF<input type="file" id="file" accept="application/pdf" hidden></label></p>
+        <p class="hint">ou arraste o PDF para cá</p>
       </div>
       <div id="importProgress" class="card hidden" style="margin-top:14px">
         <div class="row"><b id="ipLabel">Reading PDF…</b><span class="spacer"></span><span id="ipPct" class="hint"></span></div>
@@ -165,26 +166,14 @@ a{color:var(--accent)}
     </div>
     <div id="homeReady" class="hidden">
       <div class="grid" id="homeStats"></div>
-      <h2>Jump in</h2>
-      <div class="grid">
-        <button class="card" style="text-align:left" onclick="go('practice')"><b>Practice questions</b><br><span class="hint">Answer and see the explanation right away.</span></button>
-        <button class="card" style="text-align:left" onclick="go('exam')"><b>Mock exam</b><br><span class="hint">Timed, no feedback until you submit. Pass mark 65%.</span></button>
-        <button class="card" style="text-align:left" onclick="go('cards')"><b>Flashcards</b><br><span class="hint">Concept cards and question cards with spaced review.</span></button>
-      </div>
-      <p class="hint" style="margin-top:26px">Question bank loaded from your PDF. <a href="#" id="reimport">Import again</a></p>
     </div>
-
-    <details class="tutorial card" id="tutorial" lang="pt-BR">
-      <summary><span>Como usar este site</span><span class="hint">6 passos</span></summary>
-      <ol class="steps">
-        <li><b>Consiga o livro.</b> O site usa as questões de revisão do livro <i>OCA: Oracle Certified Associate Java SE 8 Programmer I Study Guide, Exam 1Z0-808</i>, de Jeanne Boyarsky e Scott Selikoff (Sybex/Wiley, ISBN 978-1-118-95740-0). Você precisa ter o seu próprio PDF do livro. Compre na <a href="https://www.wiley-vch.de/en/areas-interest/computing-computer-sciences/oca-978-1-118-95740-0" target="_blank" rel="noopener">Wiley</a> ou leia na <a href="https://oreilly.com/library/view/oca-oracle-certified/9781118957424" target="_blank" rel="noopener">O'Reilly</a> (muitas empresas e faculdades dão acesso grátis).</li>
-        <li><b>Carregue o PDF.</b> Nesta página, arraste o PDF para a caixa acima ou clique em <b>Choose PDF</b>. Leva mais ou menos um minuto. O site encontra as 145 questões de revisão dos capítulos e as respostas e explicações do Apêndice A. O arquivo nunca sai do seu navegador.</li>
-        <li><b>Pratique.</b> Abra <b>Practice</b>, escolha os capítulos e se quer todas as questões, só as que você ainda não respondeu (<i>Not answered yet</i>) ou só as que errou da última vez (<i>Missed last time</i>). Depois de cada resposta aparecem as alternativas certas e a explicação do livro. No teclado: <span class="kbd">A</span>–<span class="kbd">G</span> escolhem a alternativa, <span class="kbd">Enter</span> confere a resposta ou vai para a próxima.</li>
-        <li><b>Faça um simulado.</b> Em <b>Exam</b>, escolha 20, 40, 70 ou todas as questões. O tempo segue o da prova real (70 questões em 150 minutos) e você precisa de 65% para passar. Marque questões com <b>Flag</b> para revisar depois e clique em <b>Submit</b> para ver sua nota por capítulo e a correção de cada questão.</li>
-        <li><b>Revise com flashcards.</b> Em <b>Flashcards</b> há dois baralhos: cartas de conceitos e pegadinhas da prova (<i>Concepts &amp; exam traps</i>) e as questões do livro em forma de carta (<i>Book questions</i>). Clique na carta ou aperte <span class="kbd">Espaço</span> para virar. Aperte <b>Got it</b> quando acertar, para a carta subir de nível (3 níveis = dominada), ou <b>Again</b> para ela voltar logo.</li>
-        <li><b>Acompanhe seu progresso.</b> Em <b>Progress</b> você vê seu aproveitamento por capítulo e quantas cartas já dominou. Tudo fica salvo só neste navegador, então use sempre o mesmo navegador em cada aparelho. Se limpar os dados do site ou usar uma aba anônima, vai precisar carregar o PDF de novo.</li>
-      </ol>
-    </details>
+    <h2 lang="pt-BR">Modos de estudo</h2>
+    <div class="grid modes" lang="pt-BR">
+      <button class="card" onclick="go('practice')"><b>Practice</b><span class="hint">Questões do livro.</span></button>
+      <button class="card" onclick="go('exam')"><b>Exam</b><span class="hint">Simulado com as questões do livro.</span></button>
+      <button class="card" onclick="go('cards')"><b>Flashcards</b><span class="hint">Cartas sobre o conteúdo do livro.</span></button>
+    </div>
+    <p class="hint hidden" id="reimportRow" style="margin-top:26px"><a href="#" id="reimport">Carregar o PDF de novo</a></p>
   </section>
 
   <!-- PRACTICE -->
@@ -363,7 +352,7 @@ function go(v) {
   document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
   document.querySelectorAll('main>section').forEach(s => s.classList.toggle('hidden', s.id !== 'v-' + v));
   keyHandler = null;
-  if (v === 'home') { renderHome(); $('#tutorial').open = !S.bank; }
+  if (v === 'home') renderHome();
   if (v === 'practice') { $('#pSetup').classList.remove('hidden'); $('#pRun').classList.add('hidden'); updPCount(); }
   if (v === 'exam' && !exam) { $('#eSetup').classList.remove('hidden'); $('#eRun').classList.add('hidden'); }
   if (v === 'exam' && exam) keyHandler = examKeys;
@@ -417,12 +406,13 @@ const drop = $('#drop');
 ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
 ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
 drop.addEventListener('drop', e => { const f = [...e.dataTransfer.files].find(f => /pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)); if (f) importPdf(f); });
-$('#reimport').onclick = e => { e.preventDefault(); $('#importBox').classList.remove('hidden'); $('#homeReady').classList.add('hidden'); };
+$('#reimport').onclick = e => { e.preventDefault(); $('#importBox').classList.remove('hidden'); $('#homeReady').classList.add('hidden'); $('#reimportRow').classList.add('hidden'); };
 
 function renderHome() {
   const ready = !!S.bank;
   $('#importBox').classList.toggle('hidden', ready);
   $('#homeReady').classList.toggle('hidden', !ready);
+  $('#reimportRow').classList.toggle('hidden', !ready);
   if (!ready) return;
   const qs = allQs(), done = qs.filter(q => S.q[q.id]), right = done.filter(q => S.q[q.id].last);
   const mastered = CONCEPT_CARDS.filter((c, i) => (S.c['k' + i] || 0) >= 3).length;
