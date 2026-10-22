@@ -113,6 +113,16 @@ pre.code .k{color:var(--kw)} pre.code .s{color:var(--str)} pre.code .n{color:var
 .err{color:var(--bad);margin-top:10px}
 .hidden{display:none!important}
 .big{font-size:44px;font-weight:750;letter-spacing:-.03em;line-height:1}
+.tutorial{margin-top:28px;padding:0}
+.tutorial summary{list-style:none;cursor:pointer;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;font-weight:650;font-size:17px}
+.tutorial summary::-webkit-details-marker{display:none}
+.tutorial summary::after{content:"+";font-size:22px;color:var(--muted);margin-left:12px}
+.tutorial[open] summary::after{content:"–"}
+.tutorial summary .hint{margin-left:auto}
+.steps{margin:0;padding:0 22px 20px 22px;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:12px 0 12px 44px;border-top:1px solid var(--line)}
+.steps li::before{content:counter(s);position:absolute;left:0;top:12px;width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);font-weight:700;display:grid;place-items:center;font-size:14px}
+a{color:var(--accent)}
 @media (max-width:600px){
   h1{font-size:25px} .brand span.t{display:none} nav button{padding:8px 8px;font-size:14px}
   .chrow{grid-template-columns:1fr auto}.chrow .bar{grid-column:1/-1;order:3}
@@ -145,6 +155,7 @@ pre.code .k{color:var(--kw)} pre.code .s{color:var(--str)} pre.code .n{color:var
         <p>Drop the <i>OCA Java SE 8 Programmer I Study Guide (1Z0-808)</i> PDF here, or</p>
         <p style="margin-top:12px"><label class="btn primary">Choose PDF<input type="file" id="file" accept="application/pdf" hidden></label></p>
         <p class="hint" style="margin-top:14px">The PDF is read in your browser and never uploaded. You only need to do this once.</p>
+        <p class="hint">Don't have the book yet? <a href="https://www.wiley-vch.de/en/areas-interest/computing-computer-sciences/oca-978-1-118-95740-0" target="_blank" rel="noopener">Get it from Wiley</a>.</p>
       </div>
       <div id="importProgress" class="card hidden" style="margin-top:14px">
         <div class="row"><b id="ipLabel">Reading PDF…</b><span class="spacer"></span><span id="ipPct" class="hint"></span></div>
@@ -162,6 +173,18 @@ pre.code .k{color:var(--kw)} pre.code .s{color:var(--str)} pre.code .n{color:var
       </div>
       <p class="hint" style="margin-top:26px">Question bank loaded from your PDF. <a href="#" id="reimport">Import again</a></p>
     </div>
+
+    <details class="tutorial card" id="tutorial">
+      <summary><span>How to use this site</span><span class="hint">6 steps</span></summary>
+      <ol class="steps">
+        <li><b>Get the book.</b> This site uses the review questions from <i>OCA: Oracle Certified Associate Java SE 8 Programmer I Study Guide, Exam 1Z0-808</i> by Jeanne Boyarsky and Scott Selikoff (Sybex/Wiley, ISBN 978-1-118-95740-0). You need your own PDF copy. Buy it from <a href="https://www.wiley-vch.de/en/areas-interest/computing-computer-sciences/oca-978-1-118-95740-0" target="_blank" rel="noopener">Wiley</a>, or read it on <a href="https://oreilly.com/library/view/oca-oracle-certified/9781118957424" target="_blank" rel="noopener">O'Reilly</a> (often free through a company or university account).</li>
+        <li><b>Load the PDF.</b> On this page, drag the PDF onto the box or click <b>Choose PDF</b>. It takes about a minute. The app finds the 145 chapter review questions and the answers and explanations from Appendix A. The file never leaves your browser.</li>
+        <li><b>Practice.</b> Open <b>Practice</b>, pick chapters, and choose all questions, ones you haven't answered yet, or ones you missed last time. After each answer you see the correct options and the book's explanation. Keyboard: <span class="kbd">A</span>–<span class="kbd">G</span> pick an option, <span class="kbd">Enter</span> check or go to the next question.</li>
+        <li><b>Take a mock exam.</b> In <b>Exam</b>, choose 20, 40, 70 or all questions. The timer follows the real exam (70 questions in 150 minutes) and you need 65% to pass. Flag questions to come back to, then submit to see your score by chapter and review every answer.</li>
+        <li><b>Review with flashcards.</b> <b>Flashcards</b> has two decks: concept cards about exam traps, and the book's questions as flip cards. Tap a card or press <span class="kbd">Space</span> to flip it. Press <b>Got it</b> to move a card up a box (3 boxes = mastered) or <b>Again</b> to see it again soon.</li>
+        <li><b>Track your progress.</b> <b>Progress</b> shows your accuracy per chapter and how many cards you've mastered. Everything is saved in this browser only, so use the same browser on each device. Clearing site data or using a private window means loading the PDF again.</li>
+      </ol>
+    </details>
   </section>
 
   <!-- PRACTICE -->
@@ -340,7 +363,7 @@ function go(v) {
   document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
   document.querySelectorAll('main>section').forEach(s => s.classList.toggle('hidden', s.id !== 'v-' + v));
   keyHandler = null;
-  if (v === 'home') renderHome();
+  if (v === 'home') { renderHome(); $('#tutorial').open = !S.bank; }
   if (v === 'practice') { $('#pSetup').classList.remove('hidden'); $('#pRun').classList.add('hidden'); updPCount(); }
   if (v === 'exam' && !exam) { $('#eSetup').classList.remove('hidden'); $('#eRun').classList.add('hidden'); }
   if (v === 'exam' && exam) keyHandler = examKeys;
