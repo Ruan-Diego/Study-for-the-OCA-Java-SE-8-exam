@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OCA 808 Study</title>
+<style>
+:root{
+  --bg:#f6f3ee; --surface:#fffdf9; --surface2:#f0ebe3; --text:#211d18; --muted:#6f665b; --line:#e2dacd;
+  --accent:#c2551f; --accent-soft:#f6dfd1; --ok:#2e7d4f; --ok-soft:#dcefe2; --bad:#b3322b; --bad-soft:#f6dcd9;
+  --code-bg:#1f1b16; --code-fg:#efe7dc; --kw:#f0a869; --str:#a8d39b; --num:#e6c66e; --com:#8c8273;
+  --radius:14px; --shadow:0 1px 2px rgba(40,30,20,.06),0 4px 16px rgba(40,30,20,.06);
+  --mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#16130f; --surface:#1f1b16; --surface2:#29241d; --text:#efe7dc; --muted:#a89d8f; --line:#3a332a;
+  --accent:#ec7a3f; --accent-soft:#3d2618; --ok:#5cc184; --ok-soft:#173223; --bad:#ec6b62; --bad-soft:#3b1d1a;
+  --code-bg:#0f0d0a; --shadow:none;}}
+:root[data-theme="dark"]{
+  --bg:#16130f; --surface:#1f1b16; --surface2:#29241d; --text:#efe7dc; --muted:#a89d8f; --line:#3a332a;
+  --accent:#ec7a3f; --accent-soft:#3d2618; --ok:#5cc184; --ok-soft:#173223; --bad:#ec6b62; --bad-soft:#3b1d1a;
+  --code-bg:#0f0d0a; --shadow:none;}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+code{font-family:var(--mono);font-size:.9em;background:var(--surface2);padding:.1em .35em;border-radius:5px}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 80px}
+header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;gap:12px;padding-bottom:0;height:58px}
+.brand{font-weight:750;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.brand .cup{width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:14px}
+nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav button{background:none;border:0;padding:8px 11px;border-radius:9px;color:var(--muted);font-weight:550;font-size:15px;white-space:nowrap}
+nav button.on{color:var(--text);background:var(--surface2)}
+#themeBtn{background:none;border:1px solid var(--line);border-radius:9px;width:36px;height:34px;flex:none}
+h1{font-size:30px;letter-spacing:-.02em;margin:34px 0 6px;line-height:1.2}
+h2{font-size:20px;margin:28px 0 10px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 22px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 18px;border-radius:11px;font-weight:600}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.small{padding:6px 12px;font-size:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spacer{flex:1}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 13px;font-size:14px;font-weight:550;color:var(--muted)}
+.chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+.label{font-size:13px;font-weight:650;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 0 8px}
+.drop{border:2px dashed var(--line);border-radius:var(--radius);padding:44px 20px;text-align:center;background:var(--surface);transition:.15s}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop p{margin:6px 0;color:var(--muted)}
+.bar{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.stat{padding:16px 18px}
+.stat b{font-size:26px;display:block;letter-spacing:-.02em}
+.stat span{color:var(--muted);font-size:14px}
+.qmeta{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:14px;margin-bottom:12px;flex-wrap:wrap}
+.tag{background:var(--surface2);border-radius:7px;padding:2px 9px;font-weight:600;font-size:13px;color:var(--text)}
+.qtext{font-size:17px;margin:0 0 12px}
+pre.code{background:var(--code-bg);color:var(--code-fg);font:13.5px/1.55 var(--mono);padding:14px 16px;border-radius:11px;overflow-x:auto;margin:10px 0 14px;white-space:pre}
+pre.code .k{color:var(--kw)} pre.code .s{color:var(--str)} pre.code .n{color:var(--num)} pre.code .c{color:var(--com);font-style:italic}
+.opts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 14px;transition:border-color .12s,background .12s}
+.opt:hover:not(:disabled){border-color:var(--muted)}
+.opt .l{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-weight:700;background:var(--surface2);font-size:14px}
+.opt.multi .l{border-radius:50%}
+.opt .t{padding-top:2px;min-width:0;overflow-wrap:anywhere}
+.opt .t pre.code{margin:6px 0 0;font-size:12.5px}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .l{background:var(--accent);color:#fff}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.right .l{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .l{background:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.verdict{margin-top:18px;padding:16px 18px;border-radius:12px;border:1px solid var(--line);background:var(--surface2)}
+.verdict h3{margin:0 0 6px;font-size:16px}
+.verdict.ok h3{color:var(--ok)} .verdict.bad h3{color:var(--bad)}
+.verdict p{margin:0}
+.navrow{display:flex;gap:10px;margin-top:18px;align-items:center;flex-wrap:wrap}
+.kbd{font:12px var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;color:var(--muted)}
+.hint{color:var(--muted);font-size:13px}
+.btn.primary .kbd{color:#fff;border-color:rgba(255,255,255,.5)}
+.flash{perspective:1400px;margin-top:6px}
+.flash .inner{position:relative;min-height:320px;transition:transform .45s;transform-style:preserve-3d;cursor:pointer}
+.flash.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:auto;display:flex;flex-direction:column}
+.face.back{transform:rotateY(180deg)}
+.face .body{flex:1;display:flex;flex-direction:column;justify-content:center;font-size:18px}
+.face.front .body{font-size:20px;font-weight:560;letter-spacing:-.01em}
+.face .corner{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:10px}
+.answerline{font-weight:700;color:var(--ok);margin-bottom:8px}
+.exgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px;margin-top:16px}
+.exgrid button{border:1px solid var(--line);background:var(--surface);border-radius:8px;height:34px;font-size:13px;font-weight:600}
+.exgrid button.done{background:var(--surface2)}
+.exgrid button.cur{border-color:var(--accent);color:var(--accent)}
+.exgrid button.flag{box-shadow:inset 0 -3px 0 var(--num)}
+.exgrid button.r{background:var(--ok-soft);border-color:var(--ok)}
+.exgrid button.w{background:var(--bad-soft);border-color:var(--bad)}
+.timer{font:600 15px var(--mono)}
+.chrow{display:grid;grid-template-columns:minmax(130px,220px) 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.chrow:last-child{border-bottom:0}
+.chrow .nm{font-weight:600;font-size:15px}
+.chrow .num{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px;text-align:right;min-width:92px}
+.review{margin-top:14px}
+.review details{border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:8px}
+.review summary{padding:12px 16px;cursor:pointer;display:flex;gap:10px;align-items:center}
+.review summary .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.review details>div{padding:0 16px 16px}
+.empty{text-align:center;padding:40px 10px;color:var(--muted)}
+.err{color:var(--bad);margin-top:10px}
+.hidden{display:none!important}
+.big{font-size:44px;font-weight:750;letter-spacing:-.03em;line-height:1}
+@media (max-width:600px){
+  h1{font-size:25px} .brand span.t{display:none} nav button{padding:8px 8px;font-size:14px}
+  .chrow{grid-template-columns:1fr auto}.chrow .bar{grid-column:1/-1;order:3}
+  .card{padding:16px} .kbdhint{display:none}
+}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand"><div class="cup">☕</div><span class="t">OCA 808 Study</span></div>
+  <nav id="nav">
+    <button data-v="home" class="on">Home</button>
+    <button data-v="practice">Practice</button>
+    <button data-v="exam">Exam</button>
+    <button data-v="cards">Flashcards</button>
+    <button data-v="progress">Progress</button>
+  </nav>
+  <button id="themeBtn" title="Toggle light/dark">☾</button>
+</div></header>
+
+<main class="wrap">
+  <!-- HOME -->
+  <section id="v-home">
+    <h1>Study for the OCA Java SE 8 exam</h1>
+    <p class="sub">Practice the book's review questions, run timed mock exams, and drill concepts with flashcards. Everything stays on this computer.</p>
+    <div id="importBox">
+      <div class="drop" id="drop">
+        <div style="font-size:34px">📘</div>
+        <h2 style="margin:8px 0 4px">Load your study guide PDF</h2>
+        <p>Drop the <i>OCA Java SE 8 Programmer I Study Guide (1Z0-808)</i> PDF here, or</p>
+        <p style="margin-top:12px"><label class="btn primary">Choose PDF<input type="file" id="file" accept="application/pdf" hidden></label></p>
+        <p class="hint" style="margin-top:14px">The PDF is read in your browser and never uploaded. You only need to do this once.</p>
+      </div>
+      <div id="importProgress" class="card hidden" style="margin-top:14px">
+        <div class="row"><b id="ipLabel">Reading PDF…</b><span class="spacer"></span><span id="ipPct" class="hint"></span></div>
+        <div class="bar" style="margin-top:10px"><i id="ipBar"></i></div>
+      </div>
+      <div id="importErr" class="err"></div>
+    </div>
+    <div id="homeReady" class="hidden">
+      <div class="grid" id="homeStats"></div>
+      <h2>Jump in</h2>
+      <div class="grid">
+        <button class="card" style="text-align:left" onclick="go('practice')"><b>Practice questions</b><br><span class="hint">Answer and see the explanation right away.</span></button>
+        <button class="card" style="text-align:left" onclick="go('exam')"><b>Mock exam</b><br><span class="hint">Timed, no feedback until you submit. Pass mark 65%.</span></button>
+        <button class="card" style="text-align:left" onclick="go('cards')"><b>Flashcards</b><br><span class="hint">Concept cards and question cards with spaced review.</span></button>
+      </div>
+      <p class="hint" style="margin-top:26px">Question bank loaded from your PDF. <a href="#" id="reimport">Import again</a></p>
+    </div>
+  </section>
+
+  <!-- PRACTICE -->
+  <section id="v-practice" class="hidden">
+    <div id="pSetup">
+      <h1>Practice</h1>
+      <p class="sub">Pick chapters and a filter. You get feedback and the book's explanation after each answer.</p>
+      <div class="card">
+        <div class="label" style="margin-top:0">Chapters</div>
+        <div class="chips" id="pChaps"></div>
+        <div class="label">Questions</div>
+        <div class="chips" id="pFilter">
+          <button class="chip on" data-f="all">All</button>
+          <button class="chip" data-f="new">Not answered yet</button>
+          <button class="chip" data-f="missed">Missed last time</button>
+        </div>
+        <div class="label">Order</div>
+        <div class="chips" id="pOrder">
+          <button class="chip on" data-o="book">Book order</button>
+          <button class="chip" data-o="shuffle">Shuffled</button>
+        </div>
+        <div class="row" style="margin-top:22px"><button class="btn primary" id="pStart">Start</button><span class="hint" id="pCount"></span></div>
+      </div>
+    </div>
+    <div id="pRun" class="hidden"></div>
+  </section>
+
+  <!-- EXAM -->
+  <section id="v-exam" class="hidden">
+    <div id="eSetup">
+      <h1>Mock exam</h1>
+      <p class="sub">Random questions from all chapters, timed like the real exam (70 questions in 150 minutes). Answers are revealed only when you submit.</p>
+      <div class="card">
+        <div class="label" style="margin-top:0">Number of questions</div>
+        <div class="chips" id="eN">
+          <button class="chip" data-n="20">20</button>
+          <button class="chip" data-n="40">40</button>
+          <button class="chip on" data-n="70">70</button>
+          <button class="chip" data-n="999">All</button>
+        </div>
+        <div class="label">Timer</div>
+        <div class="chips" id="eT">
+          <button class="chip on" data-t="1">On (≈2 min 8 s per question)</button>
+          <button class="chip" data-t="0">Off</button>
+        </div>
+        <div class="row" style="margin-top:22px"><button class="btn primary" id="eStart">Start exam</button></div>
+      </div>
+    </div>
+    <div id="eRun" class="hidden"></div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section id="v-cards" class="hidden">
+    <div id="fSetup">
+      <h1>Flashcards</h1>
+      <p class="sub">Tap a card to flip it. Mark it <b>Again</b> to see it again soon, or <b>Got it</b> to move it up a box. Cards in lower boxes come first.</p>
+      <div class="card">
+        <div class="label" style="margin-top:0">Deck</div>
+        <div class="chips" id="fDeck">
+          <button class="chip on" data-d="concept">Concepts &amp; exam traps</button>
+          <button class="chip" data-d="question">Book questions</button>
+        </div>
+        <div class="label">Chapters</div>
+        <div class="chips" id="fChaps"></div>
+        <div class="label">Cards</div>
+        <div class="chips" id="fWhich">
+          <button class="chip on" data-w="due">Not mastered yet</button>
+          <button class="chip" data-w="all">All</button>
+        </div>
+        <div class="row" style="margin-top:22px"><button class="btn primary" id="fStart">Start</button><span class="hint" id="fCount"></span></div>
+      </div>
+    </div>
+    <div id="fRun" class="hidden"></div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section id="v-progress" class="hidden">
+    <h1>Progress</h1>
+    <p class="sub">Accuracy is based on the most recent answer to each question.</p>
+    <div class="grid" id="prStats"></div>
+    <h2>By chapter</h2>
+    <div class="card" id="prChaps"></div>
+    <h2>Flashcards</h2>
+    <div class="card" id="prCards"></div>
+    <div class="row" style="margin-top:26px">
+      <button class="btn small" id="resetQ">Reset question history</button>
+      <button class="btn small" id="resetC">Reset flashcard boxes</button>
+    </div>
+  </section>
+</main>
+
+<script>
+/*PARSER*/
+</script>
+<script>
+/*CARDS*/
+</script>
+<script>
+(() => {
+const KEY = 'oca808-study-v1';
+const CH_NAMES = {1:'Java Building Blocks',2:'Operators and Statements',3:'Core Java APIs',4:'Methods and Encapsulation',5:'Class Design',6:'Exceptions'};
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ---------- storage ----------
+let S = { bank: null, q: {}, c: {}, theme: null };
+function load() { try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {} }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { console.warn('Could not save progress', e); } }
+load();
+
+// ---------- theme ----------
+function applyTheme() { if (S.theme) document.documentElement.dataset.theme = S.theme; else delete document.documentElement.dataset.theme; }
+applyTheme();
+$('#themeBtn').onclick = () => {
+  const dark = S.theme ? S.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  S.theme = dark ? 'light' : 'dark'; applyTheme(); save();
+};
+
+// ---------- helpers ----------
+const KW = /\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|native|new|package|private|protected|public|return|short|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|void|volatile|while|true|false|null|var)\b/;
+function hl(code) {
+  const re = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\b(\d[\d_]*(?:\.\d+)?[LlFfDd]?)\b|([A-Za-z_$][\w$]*)/g;
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    out += esc(code.slice(last, m.index)); last = re.lastIndex;
+    if (m[1]) out += '<span class="c">' + esc(m[1]) + '</span>';
+    else if (m[2]) out += '<span class="s">' + esc(m[2]) + '</span>';
+    else if (m[3]) out += '<span class="n">' + esc(m[3]) + '</span>';
+    else if (KW.test(m[4]) && m[4].match(KW)[0] === m[4]) out += '<span class="k">' + m[4] + '</span>';
+    else out += esc(m[4]);
+  }
+  return out + esc(code.slice(last));
+}
+const inline = s => esc(s).replace(/`([^`]+)`/g, (_, c) => '<code>' + c + '</code>');
+function renderBlocks(blocks, inOpt) {
+  return blocks.map(b => b.kind === 'code'
+    ? (inOpt && !b.text.includes('\n') ? '<code>' + esc(b.text) + '</code>' : '<pre class="code">' + hl(b.text) + '</pre>')
+    : (inOpt ? '<span>' + esc(b.text) + '</span> ' : '<p class="qtext">' + esc(b.text) + '</p>')).join('');
+}
+function renderExplanation(t) {
+  // whole code lines were wrapped in backticks by the parser; render runs of them as a code block
+  const parts = t.split(/((?:`[^`]+`\s*){2,})/);
+  return parts.map(p => /^(`[^`]+`\s*){2,}$/.test(p)
+    ? '<pre class="code">' + hl(p.trim().split(/`\s*`/).map(x => x.replace(/`/g, '')).join('\n')) + '</pre>'
+    : '<p>' + inline(p) + '</p>').join('');
+}
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const allQs = () => S.bank ? S.bank.chapters.flatMap(c => c.questions.map(q => ({ ...q, ch: c.num, id: c.num + '-' + q.n }))) : [];
+const isMulti = q => q.answer.length > 1 || /\(Choose/i.test(q.body.map(b => b.text).join(' '));
+const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+function record(q, picked) {
+  const ok = sameSet(picked, q.answer);
+  const r = S.q[q.id] || { a: 0, c: 0 };
+  r.a++; if (ok) r.c++; r.last = ok ? 1 : 0; r.t = Date.now(); S.q[q.id] = r; save();
+  return ok;
+}
+function chipGroup(el, multi, onChange) {
+  el.addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    if (multi) { b.classList.toggle('on'); if (!el.querySelector('.on')) b.classList.add('on'); }
+    else { el.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === b)); }
+    onChange && onChange();
+  });
+}
+const chosen = (el, attr) => [...el.querySelectorAll('.chip.on')].map(b => b.dataset[attr]);
+function chapterChips(el, onChange) {
+  el.innerHTML = Object.entries(CH_NAMES).map(([n, t]) => `<button class="chip on" data-c="${n}">${n} · ${t}</button>`).join('');
+  chipGroup(el, true, onChange);
+}
+
+// ---------- navigation ----------
+let view = 'home', keyHandler = null;
+function go(v) {
+  if (v !== 'home' && !S.bank && v !== 'cards' && v !== 'progress') v = 'home';
+  view = v;
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  document.querySelectorAll('main>section').forEach(s => s.classList.toggle('hidden', s.id !== 'v-' + v));
+  keyHandler = null;
+  if (v === 'home') renderHome();
+  if (v === 'practice') { $('#pSetup').classList.remove('hidden'); $('#pRun').classList.add('hidden'); updPCount(); }
+  if (v === 'exam' && !exam) { $('#eSetup').classList.remove('hidden'); $('#eRun').classList.add('hidden'); }
+  if (v === 'exam' && exam) keyHandler = examKeys;
+  if (v === 'cards') { $('#fSetup').classList.remove('hidden'); $('#fRun').classList.add('hidden'); updFCount(); }
+  if (v === 'progress') renderProgress();
+  scrollTo(0, 0);
+}
+window.go = go;
+$('#nav').onclick = e => { const b = e.target.closest('button'); if (b) go(b.dataset.v); };
+document.addEventListener('keydown', e => { if (keyHandler && !e.metaKey && !e.ctrlKey && !e.altKey && e.target.tagName !== 'INPUT') keyHandler(e); });
+
+// ---------- import ----------
+function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Could not load the PDF reader. Check your internet connection (needed only for the first import).')); document.head.appendChild(s); }); }
+async function pdfjs() {
+  // pdf.js and its worker are bundled into this file; the worker code runs on the page itself
+  // (globalThis.pdfjsWorker), so no background worker, blob URL or internet connection is needed.
+  if (!window.pdfjsLib || !window.pdfjsWorker) throw new Error('The built-in PDF reader failed to load. Try opening this file in Chrome, Edge or Firefox.');
+  return window.pdfjsLib;
+}
+async function importPdf(file) {
+  $('#importErr').textContent = '';
+  $('#importProgress').classList.remove('hidden');
+  const setP = (label, f) => { $('#ipLabel').textContent = label; $('#ipBar').style.width = (f * 100) + '%'; $('#ipPct').textContent = Math.round(f * 100) + '%'; };
+  try {
+    setP('Loading PDF reader…', 0);
+    const lib = await pdfjs();
+    const doc = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    const pages = [];
+    for (let i = 1; i <= doc.numPages; i++) {
+      const tc = await (await doc.getPage(i)).getTextContent();
+      pages.push({ items: tc.items.map(it => ({ str: it.str, transform: it.transform, width: it.width, fontName: it.fontName })), styles: tc.styles });
+      if (i % 5 === 0 || i === doc.numPages) setP(`Reading page ${i} of ${doc.numPages}…`, i / doc.numPages * .95);
+    }
+    setP('Finding questions…', .97);
+    const bank = OCAParser.parseBook(pages);
+    const total = bank.chapters.reduce((n, c) => n + c.questions.length, 0);
+    const withAns = bank.chapters.reduce((n, c) => n + c.questions.filter(q => q.answer.length).length, 0);
+    if (total < 20) throw new Error("I couldn't find the review questions in this PDF. Is it the OCA Java SE 8 Programmer I Study Guide (Sybex, exam 1Z0-808)?");
+    bank.chapters.forEach(c => { if (/^Chapter \d+$/.test(c.title) && CH_NAMES[c.num]) c.title = CH_NAMES[c.num]; });
+    bank.imported = Date.now(); bank.total = total; bank.withAnswers = withAns;
+    S.bank = bank; save();
+    setP('Done', 1);
+    setTimeout(() => { $('#importProgress').classList.add('hidden'); renderHome(); }, 400);
+  } catch (e) {
+    console.error(e); $('#importProgress').classList.add('hidden');
+    $('#importErr').textContent = e.message || String(e);
+  }
+}
+$('#file').onchange = e => { const f = e.target.files[0]; if (f) importPdf(f); e.target.value = ''; };
+const drop = $('#drop');
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { const f = [...e.dataTransfer.files].find(f => /pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)); if (f) importPdf(f); });
+$('#reimport').onclick = e => { e.preventDefault(); $('#importBox').classList.remove('hidden'); $('#homeReady').classList.add('hidden'); };
+
+function renderHome() {
+  const ready = !!S.bank;
+  $('#importBox').classList.toggle('hidden', ready);
+  $('#homeReady').classList.toggle('hidden', !ready);
+  if (!ready) return;
+  const qs = allQs(), done = qs.filter(q => S.q[q.id]), right = done.filter(q => S.q[q.id].last);
+  const mastered = CONCEPT_CARDS.filter((c, i) => (S.c['k' + i] || 0) >= 3).length;
+  $('#homeStats').innerHTML = [
+    [qs.length, 'review questions in 6 chapters'],
+    [done.length ? Math.round(right.length / done.length * 100) + '%' : '–', `accuracy on ${done.length} answered`],
+    [mastered + ' / ' + CONCEPT_CARDS.length, 'concept cards mastered'],
+  ].map(([b, s]) => `<div class="card stat"><b>${b}</b><span>${s}</span></div>`).join('');
+}
+
+// ---------- question view (shared by practice & exam) ----------
+function questionHTML(q, idx, total, opts) {
+  const multi = isMulti(q);
+  const st = S.q[q.id];
+  return `<div class="card">
+    <div class="qmeta"><span class="tag">Ch ${q.ch} · Q${q.n}</span><span>${idx + 1} of ${total}</span>
+      ${multi ? '<span>Select all that apply</span>' : ''}
+      <span class="spacer"></span>${opts.extra || (st ? `<span>${st.c}/${st.a} correct before</span>` : '')}</div>
+    ${renderBlocks(q.body)}
+    <div class="opts">${q.options.map((o, i) => `<button class="opt ${multi ? 'multi' : ''}" data-l="${o.l}"><span class="l">${o.l}</span><span class="t">${renderBlocks(o.body, true)}</span></button>`).join('')}</div>
+    <div class="verdict-slot"></div>
+    <div class="navrow">${opts.nav}</div>
+  </div>`;
+}
+function markOptions(root, q, picked) {
+  root.querySelectorAll('.opt').forEach(b => {
+    const l = b.dataset.l; b.disabled = true; b.classList.remove('sel');
+    if (q.answer.includes(l)) b.classList.add('right'); else if (picked.includes(l)) b.classList.add('wrong');
+  });
+}
+function verdictHTML(q, ok, picked) {
+  return `<div class="verdict ${ok ? 'ok' : 'bad'}"><h3>${ok ? 'Correct' : 'Not quite'} · Answer: ${q.answer.join(', ')}${!ok && picked.length ? ` <span class="hint" style="font-weight:500">(you chose ${picked.join(', ') || 'nothing'})</span>` : ''}</h3>${renderExplanation(q.explanation)}</div>`;
+}
+function wireOptions(root, q, picked, onChange) {
+  const multi = isMulti(q);
+  root.querySelectorAll('.opt').forEach(b => b.onclick = () => toggleOpt(root, q, picked, b.dataset.l, onChange));
+}
+function toggleOpt(root, q, picked, l, onChange) {
+  const btn = root.querySelector(`.opt[data-l="${l}"]`); if (!btn || btn.disabled) return;
+  if (isMulti(q)) { const i = picked.indexOf(l); if (i >= 0) picked.splice(i, 1); else picked.push(l); }
+  else { picked.length = 0; picked.push(l); }
+  root.querySelectorAll('.opt').forEach(b => b.classList.toggle('sel', picked.includes(b.dataset.l)));
+  onChange && onChange();
+}
+
+// ---------- practice ----------
+chapterChips($('#pChaps'), updPCount);
+chipGroup($('#pFilter'), false, updPCount);
+chipGroup($('#pOrder'), false);
+function practicePool() {
+  const chs = chosen($('#pChaps'), 'c').map(Number), f = chosen($('#pFilter'), 'f')[0];
+  return allQs().filter(q => chs.includes(q.ch) && (f === 'all' || (f === 'new' && !S.q[q.id]) || (f === 'missed' && S.q[q.id] && !S.q[q.id].last)));
+}
+function updPCount() { if (!S.bank) return; const n = practicePool().length; $('#pCount').textContent = n + ' question' + (n === 1 ? '' : 's'); $('#pStart').disabled = !n; }
+let P = null;
+$('#pStart').onclick = () => {
+  let pool = practicePool(); if (chosen($('#pOrder'), 'o')[0] === 'shuffle') pool = shuffle(pool);
+  P = { list: pool, i: 0, picked: [], checked: false, right: 0, answered: 0 };
+  $('#pSetup').classList.add('hidden'); $('#pRun').classList.remove('hidden'); renderP();
+};
+function renderP() {
+  const root = $('#pRun');
+  if (P.i >= P.list.length) {
+    root.innerHTML = `<div class="card empty"><div class="big">${P.answered ? Math.round(P.right / P.answered * 100) : 0}%</div><p>${P.right} of ${P.answered} correct this session.</p><div class="row" style="justify-content:center"><button class="btn primary" onclick="go('practice')">New session</button></div></div>`;
+    keyHandler = null; return;
+  }
+  const q = P.list[P.i]; P.picked = []; P.checked = false;
+  root.innerHTML = `<div class="row" style="margin:22px 0 12px"><button class="btn small" id="pQuit">← End session</button><span class="spacer"></span><span class="hint">${P.right}/${P.answered} correct</span></div>
+    <div class="bar" style="margin-bottom:14px"><i style="width:${P.i / P.list.length * 100}%"></i></div>` +
+    questionHTML(q, P.i, P.list.length, { nav: `<button class="btn" id="pPrev" ${P.i ? '' : 'disabled'}>Back</button><span class="spacer"></span><span class="hint kbdhint"><span class="kbd">A</span>–<span class="kbd">G</span> pick · <span class="kbd">Enter</span> check / next</span><button class="btn" id="pSkip">Skip</button><button class="btn primary" id="pCheck" disabled>Check</button>` });
+  wireOptions(root, q, P.picked, () => { $('#pCheck').disabled = !P.picked.length; });
+  $('#pQuit').onclick = () => { P.i = P.list.length; renderP(); };
+  $('#pPrev').onclick = () => { P.i--; renderP(); };
+  $('#pSkip').onclick = () => { P.i++; renderP(); };
+  $('#pCheck').onclick = pCheck;
+  keyHandler = e => {
+    const k = e.key.toUpperCase();
+    if (/^[A-H]$/.test(k) && !P.checked) { toggleOpt(root, q, P.picked, k, () => { $('#pCheck').disabled = !P.picked.length; }); e.preventDefault(); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (P.checked) { P.i++; renderP(); } else if (P.picked.length) pCheck(); }
+    else if (e.key === 'ArrowRight' && P.checked) { P.i++; renderP(); }
+  };
+  scrollTo(0, 0);
+}
+function pCheck() {
+  const q = P.list[P.i], root = $('#pRun');
+  const ok = record(q, P.picked); P.checked = true; P.answered++; if (ok) P.right++;
+  markOptions(root, q, P.picked);
+  root.querySelector('.verdict-slot').innerHTML = verdictHTML(q, ok, P.picked);
+  const c = $('#pCheck'); c.textContent = P.i + 1 < P.list.length ? 'Next →' : 'Finish'; c.disabled = false;
+  c.onclick = () => { P.i++; renderP(); };
+  $('#pSkip').classList.add('hidden');
+  root.querySelector('.row .hint').textContent = `${P.right}/${P.answered} correct`;
+}
+
+// ---------- exam ----------
+chipGroup($('#eN'), false); chipGroup($('#eT'), false);
+let exam = null, tick = null;
+$('#eStart').onclick = () => {
+  const n = +chosen($('#eN'), 'n')[0], timed = chosen($('#eT'), 't')[0] === '1';
+  const list = shuffle(allQs()).slice(0, n);
+  exam = { list, i: 0, picks: list.map(() => []), flags: [], timed, end: timed ? Date.now() + Math.round(list.length * 150 / 70 * 60000) : 0, done: false };
+  $('#eSetup').classList.add('hidden'); $('#eRun').classList.remove('hidden');
+  if (tick) clearInterval(tick);
+  if (timed) tick = setInterval(updTimer, 1000);
+  renderE();
+};
+function fmt(ms) { ms = Math.max(0, ms); const s = Math.floor(ms / 1000); return `${Math.floor(s / 3600) ? Math.floor(s / 3600) + ':' : ''}${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; }
+function updTimer() {
+  if (!exam || exam.done) return;
+  const left = exam.end - Date.now(), el = $('#eTimer');
+  if (el) { el.textContent = fmt(left); el.style.color = left < 5 * 60000 ? 'var(--bad)' : ''; }
+  if (left <= 0) submitExam();
+}
+function renderE() {
+  const root = $('#eRun'), q = exam.list[exam.i], picked = exam.picks[exam.i];
+  const answered = exam.picks.filter(p => p.length).length;
+  root.innerHTML = `<div class="row" style="margin:22px 0 12px"><b>Mock exam</b><span class="hint">${answered}/${exam.list.length} answered</span><span class="spacer"></span>${exam.timed ? '<span class="timer" id="eTimer"></span>' : ''}<button class="btn small" id="eSubmit">Submit</button></div>` +
+    questionHTML(q, exam.i, exam.list.length, { extra: ' ', nav: `<button class="btn" id="ePrev" ${exam.i ? '' : 'disabled'}>← Back</button><button class="btn" id="eFlag">${exam.flags[exam.i] ? '★ Flagged' : '☆ Flag'}</button><span class="spacer"></span><button class="btn primary" id="eNext">${exam.i + 1 < exam.list.length ? 'Next →' : 'Review & submit'}</button>` }) +
+    `<div class="exgrid">${exam.list.map((_, i) => `<button data-i="${i}" class="${exam.picks[i].length ? 'done' : ''} ${i === exam.i ? 'cur' : ''} ${exam.flags[i] ? 'flag' : ''}">${i + 1}</button>`).join('')}</div>
+    <p class="hint kbdhint" style="margin-top:10px"><span class="kbd">A</span>–<span class="kbd">G</span> pick · <span class="kbd">←</span> <span class="kbd">→</span> move</p>`;
+  root.querySelectorAll('.opt').forEach(b => b.classList.toggle('sel', picked.includes(b.dataset.l)));
+  wireOptions(root, q, picked, refreshGrid);
+  $('#ePrev').onclick = () => { exam.i--; renderE(); };
+  $('#eNext').onclick = () => { if (exam.i + 1 < exam.list.length) { exam.i++; renderE(); } else confirmSubmit(); };
+  $('#eFlag').onclick = () => { exam.flags[exam.i] = !exam.flags[exam.i]; renderE(); };
+  $('#eSubmit').onclick = confirmSubmit;
+  root.querySelector('.exgrid').onclick = e => { const b = e.target.closest('button'); if (b) { exam.i = +b.dataset.i; renderE(); } };
+  keyHandler = examKeys; updTimer();
+}
+function refreshGrid() {
+  $('#eRun').querySelectorAll('.exgrid button').forEach((b, i) => b.classList.toggle('done', !!exam.picks[i].length));
+  $('#eRun').querySelector('.row .hint').textContent = `${exam.picks.filter(p => p.length).length}/${exam.list.length} answered`;
+}
+function examKeys(e) {
+  if (!exam || exam.done) return;
+  const k = e.key.toUpperCase();
+  if (/^[A-H]$/.test(k)) { toggleOpt($('#eRun'), exam.list[exam.i], exam.picks[exam.i], k, refreshGrid); e.preventDefault(); }
+  else if (e.key === 'ArrowRight' && exam.i + 1 < exam.list.length) { exam.i++; renderE(); }
+  else if (e.key === 'ArrowLeft' && exam.i > 0) { exam.i--; renderE(); }
+}
+let confirmArmed = false;
+function confirmSubmit() {
+  const left = exam.picks.filter(p => !p.length).length, btn = $('#eSubmit');
+  if (left && !confirmArmed) { confirmArmed = true; btn.textContent = `${left} unanswered. Submit anyway?`; btn.classList.add('primary'); setTimeout(() => { confirmArmed = false; if (btn.isConnected) { btn.textContent = 'Submit'; btn.classList.remove('primary'); } }, 4000); return; }
+  confirmArmed = false; submitExam();
+}
+function submitExam() {
+  if (!exam || exam.done) return;
+  exam.done = true; clearInterval(tick); keyHandler = null;
+  const res = exam.list.map((q, i) => ({ q, picked: exam.picks[i], ok: record(q, exam.picks[i]) }));
+  const right = res.filter(r => r.ok).length, pct = Math.round(right / res.length * 100), pass = pct >= 65;
+  const byCh = {}; res.forEach(r => { const c = byCh[r.q.ch] || (byCh[r.q.ch] = { n: 0, r: 0 }); c.n++; if (r.ok) c.r++; });
+  $('#eRun').innerHTML = `<h1>Exam result</h1>
+    <div class="card" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+      <div><div class="big" style="color:${pass ? 'var(--ok)' : 'var(--bad)'}">${pct}%</div><div class="hint" style="margin-top:6px">${right} of ${res.length} correct · pass mark 65%</div></div>
+      <div style="flex:1;min-width:220px">${Object.entries(byCh).sort().map(([c, v]) => `<div class="chrow" style="grid-template-columns:1fr 2fr auto;padding:5px 0;border:0"><span class="hint">Ch ${c}</span><div class="bar"><i style="width:${v.r / v.n * 100}%"></i></div><span class="num" style="min-width:40px">${v.r}/${v.n}</span></div>`).join('')}</div>
+    </div>
+    <div class="row" style="margin-top:16px"><button class="btn primary" id="eAgain">New exam</button><span class="spacer"></span><button class="btn small" id="eOnlyWrong">Show only missed</button></div>
+    <div class="review" id="eReview">${res.map((r, i) => `<details data-ok="${r.ok ? 1 : 0}"><summary><span class="dot" style="background:${r.ok ? 'var(--ok)' : 'var(--bad)'}"></span><b>${i + 1}.</b> <span class="tag">Ch ${r.q.ch} · Q${r.q.n}</span><span class="hint">${r.ok ? 'correct' : `you: ${r.picked.join(', ') || '—'} · answer: ${r.q.answer.join(', ')}`}</span></summary><div data-i="${i}"></div></details>`).join('')}</div>`;
+  const rev = $('#eReview');
+  rev.addEventListener('toggle', e => {
+    const d = e.target; if (!d.open) return; const box = d.querySelector('div[data-i]'); if (box.innerHTML) return;
+    const r = res[+box.dataset.i];
+    box.innerHTML = renderBlocks(r.q.body) + `<div class="opts">${r.q.options.map(o => `<button class="opt ${isMulti(r.q) ? 'multi' : ''}" data-l="${o.l}"><span class="l">${o.l}</span><span class="t">${renderBlocks(o.body, true)}</span></button>`).join('')}</div>` + verdictHTML(r.q, r.ok, r.picked);
+    markOptions(box, r.q, r.picked);
+  }, true);
+  $('#eAgain').onclick = () => { exam = null; go('exam'); };
+  $('#eOnlyWrong').onclick = e => { const on = e.target.classList.toggle('primary'); rev.querySelectorAll('details').forEach(d => d.classList.toggle('hidden', on && d.dataset.ok === '1')); };
+  scrollTo(0, 0);
+}
+
+// ---------- flashcards ----------
+chapterChips($('#fChaps'), updFCount);
+chipGroup($('#fDeck'), false, updFCount); chipGroup($('#fWhich'), false, updFCount);
+function deckCards() {
+  const deck = chosen($('#fDeck'), 'd')[0], chs = chosen($('#fChaps'), 'c').map(Number), which = chosen($('#fWhich'), 'w')[0];
+  let cards;
+  if (deck === 'concept') cards = CONCEPT_CARDS.map((c, i) => ({ id: 'k' + i, ch: c[0], front: c[1], back: c[2], kind: 'concept' }));
+  else cards = allQs().map(q => ({ id: 'q' + q.id, ch: q.ch, q, kind: 'question' }));
+  cards = cards.filter(c => chs.includes(c.ch));
+  if (which === 'due') cards = cards.filter(c => (S.c[c.id] || 0) < 3);
+  return cards;
+}
+function updFCount() {
+  const deck = chosen($('#fDeck'), 'd')[0];
+  if (deck === 'question' && !S.bank) { $('#fCount').textContent = 'Load your PDF on the Home tab to use question cards.'; $('#fStart').disabled = true; return; }
+  const n = deckCards().length; $('#fCount').textContent = n + ' card' + (n === 1 ? '' : 's'); $('#fStart').disabled = !n;
+}
+let F = null;
+$('#fStart').onclick = () => {
+  // lower boxes first, shuffled within box
+  const cards = shuffle(deckCards()).sort((a, b) => (S.c[a.id] || 0) - (S.c[b.id] || 0));
+  F = { queue: cards, total: cards.length, good: 0, seen: 0 };
+  $('#fSetup').classList.add('hidden'); $('#fRun').classList.remove('hidden'); renderF();
+};
+function cardFaces(c) {
+  if (c.kind === 'concept') return { front: inline(c.front), back: inline(c.back) };
+  const q = c.q;
+  return {
+    front: renderBlocks(q.body).replace(/class="qtext"/g, 'class="qtext" style="font-size:17px;font-weight:500"') +
+      `<div style="font-size:15px;font-weight:400">${q.options.map(o => `<div style="margin:4px 0"><b>${o.l}.</b> ${renderBlocks(o.body, true)}</div>`).join('')}</div>`,
+    back: `<div class="answerline">Answer: ${q.answer.join(', ')}</div><div style="font-size:15px">${q.options.filter(o => q.answer.includes(o.l)).map(o => `<div style="margin:2px 0"><b>${o.l}.</b> ${renderBlocks(o.body, true)}</div>`).join('')}</div><div style="font-size:15px;margin-top:10px">${renderExplanation(q.explanation)}</div>`
+  };
+}
+function renderF() {
+  const root = $('#fRun');
+  if (!F.queue.length) {
+    root.innerHTML = `<div class="card empty" style="margin-top:22px"><div class="big">🎉</div><p>Deck finished: ${F.total} cards, ${F.seen} reviews.</p><div class="row" style="justify-content:center"><button class="btn primary" onclick="go('cards')">Back to decks</button></div></div>`;
+    keyHandler = null; return;
+  }
+  const c = F.queue[0], f = cardFaces(c), box = S.c[c.id] || 0;
+  root.innerHTML = `<div class="row" style="margin:22px 0 12px"><button class="btn small" onclick="go('cards')">← Decks</button><span class="spacer"></span><span class="hint">${F.total - F.queue.length} done · ${F.queue.length} left</span></div>
+    <div class="bar" style="margin-bottom:14px"><i style="width:${(F.total - F.queue.length) / F.total * 100}%"></i></div>
+    <div class="flash" id="flash"><div class="inner">
+      <div class="face front card"><div class="corner"><span class="tag">Ch ${c.ch} · ${esc(CH_NAMES[c.ch])}</span><span>Box ${box}/3</span></div><div class="body"><div>${f.front}</div></div><div class="hint" style="text-align:center;margin-top:10px">Tap or press <span class="kbd">Space</span> to flip</div></div>
+      <div class="face back card"><div class="corner"><span class="tag">Answer</span><span>Box ${box}/3</span></div><div class="body" style="justify-content:flex-start"><div>${f.back}</div></div></div>
+    </div></div>
+    <div class="navrow" style="justify-content:center"><button class="btn" id="fAgain">↺ Again <span class="kbd">1</span></button><button class="btn primary" id="fGood">✓ Got it <span class="kbd">2</span></button></div>`;
+  const flash = $('#flash'), inner = flash.querySelector('.inner');
+  // size the card to the taller face
+  requestAnimationFrame(() => { const h = Math.max(...[...flash.querySelectorAll('.face')].map(el => { el.style.position = 'relative'; const v = el.scrollHeight; el.style.position = ''; return v; })); inner.style.minHeight = Math.max(320, h) + 'px'; });
+  flash.onclick = () => flash.classList.toggle('flipped');
+  $('#fAgain').onclick = () => rate(false); $('#fGood').onclick = () => rate(true);
+  keyHandler = e => {
+    if (e.key === ' ') { e.preventDefault(); flash.classList.toggle('flipped'); }
+    else if (e.key === '1') rate(false); else if (e.key === '2' || e.key === 'Enter') rate(true);
+  };
+}
+function rate(good) {
+  const c = F.queue.shift(); F.seen++;
+  S.c[c.id] = good ? Math.min(3, (S.c[c.id] || 0) + 1) : 0; save();
+  if (!good) F.queue.splice(Math.min(3, F.queue.length), 0, c);
+  renderF();
+}
+
+// ---------- progress ----------
+function renderProgress() {
+  const qs = allQs();
+  const done = qs.filter(q => S.q[q.id]), right = done.filter(q => S.q[q.id].last);
+  $('#prStats').innerHTML = [
+    [done.length + ' / ' + qs.length, 'questions answered'],
+    [done.length ? Math.round(right.length / done.length * 100) + '%' : '–', 'current accuracy'],
+    [done.length - right.length, 'questions to revisit'],
+  ].map(([b, s]) => `<div class="card stat"><b>${b}</b><span>${s}</span></div>`).join('');
+  $('#prChaps').innerHTML = S.bank ? S.bank.chapters.map(c => {
+    const cq = qs.filter(q => q.ch === c.num), d = cq.filter(q => S.q[q.id]), r = d.filter(q => S.q[q.id].last);
+    return `<div class="chrow"><span class="nm">${c.num}. ${esc(c.title)}</span><div class="bar"><i style="width:${cq.length ? r.length / cq.length * 100 : 0}%"></i></div><span class="num">${r.length}/${cq.length} right</span></div>`;
+  }).join('') : '<p class="hint">Load your PDF on the Home tab first.</p>';
+  $('#prCards').innerHTML = Object.entries(CH_NAMES).map(([n, t]) => {
+    const cs = CONCEPT_CARDS.map((c, i) => [c, i]).filter(([c]) => c[0] == n), m = cs.filter(([, i]) => (S.c['k' + i] || 0) >= 3).length;
+    return `<div class="chrow"><span class="nm">${n}. ${t}</span><div class="bar"><i style="width:${m / cs.length * 100}%;background:var(--ok)"></i></div><span class="num">${m}/${cs.length} mastered</span></div>`;
+  }).join('');
+}
+let resetArm = {};
+function armed(btn, label, fn) {
+  if (resetArm[btn.id]) { fn(); resetArm[btn.id] = false; btn.textContent = label; renderProgress(); return; }
+  resetArm[btn.id] = true; btn.textContent = 'Click again to confirm'; setTimeout(() => { resetArm[btn.id] = false; btn.textContent = label; }, 3000);
+}
+$('#resetQ').onclick = e => armed(e.target, 'Reset question history', () => { S.q = {}; save(); });
+$('#resetC').onclick = e => armed(e.target, 'Reset flashcard boxes', () => { S.c = {}; save(); });
+
+go('home');
+})();
+</script>
+<!-- PDF.js 3.11.174 (Apache-2.0, Mozilla) bundled for offline use -->
+<script>
+/*PDFWORKER*/
+</script>
+<script>
+/*PDFLIB*/
+</script>
+</body>
+</html>

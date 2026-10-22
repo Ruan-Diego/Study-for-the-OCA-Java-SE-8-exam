@@ -1,0 +1,12 @@
+{
+  "name": "study-for-the-oca-java-se-8-exam",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Study app for the OCA Java SE 8 Programmer I exam (1Z0-808): practice questions, mock exams and flashcards.",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "pdfjs-dist": "3.11.174"
+  }
+}
